@@ -14,10 +14,10 @@
     header { display:flex; align-items:center; justify-content:space-between; } h1 { margin:0; font-size:1.25rem; letter-spacing:.04em; } .match { color:#c4d1e5; font-size:.88rem; }
     .mode { display:flex; gap:8px; background:#091d35; padding:5px; border-radius:13px; } .mode button { flex:1; border:0; border-radius:9px; color:#b9cbe1; background:transparent; padding:10px; font-weight:700; font-size:.9rem; } .mode button.active { color:#10233b; background:#d7ff5f; }
     .teams { display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1; } .team { min-height:360px; border:1px solid #3a5f86; border-radius:22px; padding:16px 10px 12px; background:linear-gradient(160deg,#183b61,#0c2340); display:flex; flex-direction:column; align-items:center; justify-content:space-between; box-shadow:0 12px 28px #0005; }
-    .team.serve { border-color:#d7ff5f; box-shadow:0 0 0 2px #d7ff5f44,0 12px 28px #0005; } .team-name { width:100%; text-align:center; border:0; border-bottom:1px solid #5f7d9d; background:transparent; color:white; font-size:1rem; font-weight:700; padding:6px 2px; border-radius:0; } .team-name:focus { outline:2px solid #d7ff5f; outline-offset:3px; }
+    .team.serve { border-color:#d7ff5f; box-shadow:0 0 0 2px #d7ff5f44,0 12px 28px #0005; } .team-name { width:100%; text-align:center; border:0; border-bottom:1px solid #5f7d9d; background:transparent; color:white; font-size:1rem; font-weight:700; padding:6px 2px; border-radius:0; } .team-name:focus { outline:2px solid #d7ff5f; outline-offset:3px; } .player { width:100%; border:1px solid #466d94; border-radius:9px; background:#102d4d; color:#f5f8ff; text-align:center; font:inherit; font-size:.88rem; font-weight:700; padding:9px 5px; } .player.top { margin-top:4px; } .player.bottom { margin-bottom:4px; } .player:focus { outline:2px solid #d7ff5f; outline-offset:2px; }
     .score { font-variant-numeric:tabular-nums; font-size:clamp(5.2rem,28vw,8rem); line-height:.9; font-weight:800; letter-spacing:-.08em; }
     .point { width:100%; min-height:76px; border:0; border-radius:16px; background:#d7ff5f; color:#10233b; font-size:1.2rem; font-weight:800; box-shadow:0 5px 0 #98b846; } .point:active { transform:translateY(4px); box-shadow:0 1px 0 #98b846; } button { cursor:pointer; -webkit-tap-highlight-color:transparent; }
-    .status { text-align:center; min-height:24px; color:#d7ff5f; font-weight:700; } .positions { display:grid; grid-template-columns:1fr 1fr; gap:10px; } .court { border:1px solid #3a5f86; background:#0b2039; border-radius:15px; padding:10px; text-align:center; } .court h2 { margin:0 0 8px; font-size:.85rem; color:#b9cbe1; } .slot { display:flex; align-items:center; justify-content:space-between; padding:7px 8px; border-radius:8px; font-size:.88rem; } .slot.back { margin-bottom:5px; background:#173c61; } .slot.front { background:#102c4c; } .slot.server { outline:2px solid #d7ff5f; color:#d7ff5f; } .slot span { color:#8fa8c3; font-size:.75rem; } .slot input { width:68%; border:0; background:transparent; color:#f5f8ff; text-align:right; font:inherit; font-weight:700; } .swap { width:100%; margin-top:7px; border:1px solid #527493; border-radius:8px; background:#112f50; color:#d7ff5f; padding:7px; font-size:.78rem; font-weight:700; } .actions { display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px; } .actions button { border:1px solid #527493; background:#112f50; color:#f5f8ff; border-radius:12px; padding:13px 8px; font-size:.9rem; font-weight:700; } .actions button.danger { color:#ffd2ce; border-color:#855057; }
+    .status { text-align:center; min-height:24px; color:#d7ff5f; font-weight:700; } .actions { display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px; } .actions button { border:1px solid #527493; background:#112f50; color:#f5f8ff; border-radius:12px; padding:13px 8px; font-size:.9rem; font-weight:700; } .actions button.danger { color:#ffd2ce; border-color:#855057; }
     .history { color:#b9cbe1; text-align:center; font-size:.83rem; min-height:1.2em; } .hint { color:#8fa8c3; text-align:center; font-size:.8rem; margin:0; }
     @media (max-width:360px) { .team { min-height:320px; } .score { font-size:5.1rem; } main { padding-left:12px; padding-right:12px; } }
   </style>
@@ -27,19 +27,15 @@
     <header><h1>🏸 羽球記分</h1><span class="match" id="gameLabel">第 1 局 · 21 分制</span></header>
     <section class="mode" aria-label="比賽分制"><button class="active" data-limit="21">21 分制</button><button data-limit="15">15 分制</button></section>
     <section class="teams" aria-label="比分">
-      <article class="team serve" id="team0"><input class="team-name" aria-label="A 隊名稱" value="A 隊"><div class="score" id="score0">0</div><button class="point" data-team="0" aria-label="A 隊加一分">＋ 1 分</button></article>
-      <article class="team" id="team1"><input class="team-name" aria-label="B 隊名稱" value="B 隊"><div class="score" id="score1">0</div><button class="point" data-team="1" aria-label="B 隊加一分">＋ 1 分</button></article>
+      <article class="team serve" id="team0"><input class="team-name" aria-label="A 隊名稱" value="A 隊"><input class="player top" id="aTop" aria-label="A 隊上方球員" value="A 前排"><div class="score" id="score0">0</div><input class="player bottom" id="aBottom" aria-label="A 隊下方球員" value="A 後排"><button class="point" data-team="0" aria-label="A 隊加一分">＋ 1 分</button></article>
+      <article class="team" id="team1"><input class="team-name" aria-label="B 隊名稱" value="B 隊"><input class="player top" id="bTop" aria-label="B 隊上方球員" value="B 前排"><div class="score" id="score1">0</div><input class="player bottom" id="bBottom" aria-label="B 隊下方球員" value="B 後排"><button class="point" data-team="1" aria-label="B 隊加一分">＋ 1 分</button></article>
     </section>
     <div class="status" id="status">A 隊發球</div>
-    <section class="positions" aria-label="雙打站位">
-      <div class="court"><h2>A 隊站位</h2><div class="slot back" id="aBack"><span>後排</span><input aria-label="A 隊後排球員" value="A 後排"></div><div class="slot front" id="aFront"><span>前排</span><input aria-label="A 隊前排球員" value="A 前排"></div><button class="swap" data-swap="0">↕ 前後換位</button></div>
-      <div class="court"><h2>B 隊站位</h2><div class="slot back" id="bBack"><span>後排</span><input aria-label="B 隊後排球員" value="B 後排"></div><div class="slot front" id="bFront"><span>前排</span><input aria-label="B 隊前排球員" value="B 前排"></div><button class="swap" data-swap="1">↕ 前後換位</button></div>
-    </section>
     <div class="actions"><button id="undo">↶ 復原</button><button id="newGame">下一局</button><button class="danger" id="reset">重設</button></div>
     <div class="history" id="history"></div><p class="hint">點選隊伍即可加分；得分方取得發球權</p>
   </main>
   <script>
-    let score=[0,0], serve=0, limit=21, game=1, past=[], positions=[["back","front"],["back","front"]];
+    let score=[0,0], serve=0, limit=21, game=1, past=[];
     const $=id=>document.getElementById(id);
     function win(i){ const other=1-i; return score[i]>=limit && score[i]-score[other]>=2; }
     function render(){
@@ -47,19 +43,18 @@
       [0,1].forEach(i=>$('team'+i).classList.toggle('serve',serve===i));
       const names=[...document.querySelectorAll('.team-name')].map(x=>x.value||'未命名');
       const winner=win(0)?0:win(1)?1:null;
-      [["aBack","aFront"],["bBack","bFront"]].forEach((ids,team)=>ids.forEach((id,index)=>$(id).classList.toggle('server',serve===team && positions[team][index]==='back')));
       $('status').textContent=winner===null ? names[serve]+' 發球' : '🎉 '+names[winner]+' 贏得本局！';
       $('gameLabel').textContent='第 '+game+' 局 · '+limit+' 分制';
       document.querySelectorAll('.mode button').forEach(b=>b.classList.toggle('active',+b.dataset.limit===limit));
-      $('history').textContent=past.length?'最近得分：'+past.slice(-6).map(x=>x.team+1).join(' → '):'';
+      $('history').textContent=past.length?'最近得分：'+past.slice(-6).map(x=>x+1).join(' → '):'';
     }
-    function add(i){ if(win(0)||win(1)) return; past.push({team:i,position:[...positions[i]]}); score[i]++; serve=i; render(); }
+    function swapPlayers(i){ const ids=i?["bTop","bBottom"]:["aTop","aBottom"], top=$(ids[0]), bottom=$(ids[1]); [top.value,bottom.value]=[bottom.value,top.value]; }
+    function add(i){ if(win(0)||win(1)) return; past.push(i); score[i]++; serve=i; swapPlayers(i); render(); }
     document.querySelectorAll('.point').forEach(b=>b.onclick=()=>add(+b.dataset.team));
-    document.querySelectorAll('.swap').forEach(b=>b.onclick=()=>{ const team=+b.dataset.swap, ids=team?["bBack","bFront"]:["aBack","aFront"], first=$(ids[0]).querySelector('input'), second=$(ids[1]).querySelector('input'); [first.value,second.value]=[second.value,first.value]; positions[team].reverse(); render(); });
     document.querySelectorAll('.mode button').forEach(b=>b.onclick=()=>{ limit=+b.dataset.limit; render(); });
-    $('undo').onclick=()=>{ const move=past.pop(); if(move){score[move.team]--; positions[move.team]=move.position; serve=past.length?past[past.length-1].team:0; render();} };
-    $('newGame').onclick=()=>{ if(score[0]||score[1]) { game++; score=[0,0]; serve=0; past=[]; positions=[["back","front"],["back","front"]]; render(); } };
-    $('reset').onclick=()=>{ score=[0,0]; serve=0; past=[]; game=1; positions=[["back","front"],["back","front"]]; render(); };
+    $('undo').onclick=()=>{ const i=past.pop(); if(i!==undefined){score[i]--; serve=past.length?past[past.length-1]:0; swapPlayers(i); render();} };
+    $('newGame').onclick=()=>{ if(score[0]||score[1]) { game++; score=[0,0]; serve=0; past=[]; render(); } };
+    $('reset').onclick=()=>{ score=[0,0]; serve=0; past=[]; game=1; render(); };
     document.querySelectorAll('.team-name').forEach(x=>x.addEventListener('input',render)); render();
   </script>
 </body>
