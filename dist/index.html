@@ -53,7 +53,7 @@
       document.querySelectorAll('.mode button').forEach(b=>b.classList.toggle('active',+b.dataset.limit===limit));
       $('history').textContent=past.length?'最近得分：'+past.slice(-6).map(x=>x.team+1).join(' → '):'';
     }
-    function add(i){ if(win(0)||win(1)) return; past.push({team:i,position:[...positions[i]}); score[i]++; serve=i; render(); }
+    function add(i){ if(win(0)||win(1)) return; past.push({team:i,position:[...positions[i]]}); score[i]++; serve=i; render(); }
     document.querySelectorAll('.point').forEach(b=>b.onclick=()=>add(+b.dataset.team));
     document.querySelectorAll('.swap').forEach(b=>b.onclick=()=>{ const team=+b.dataset.swap, ids=team?["bBack","bFront"]:["aBack","aFront"], first=$(ids[0]).querySelector('input'), second=$(ids[1]).querySelector('input'); [first.value,second.value]=[second.value,first.value]; positions[team].reverse(); render(); });
     document.querySelectorAll('.mode button').forEach(b=>b.onclick=()=>{ limit=+b.dataset.limit; render(); });
