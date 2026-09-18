@@ -1,0 +1,16 @@
+{
+  "name": "羽球記分",
+  "short_name": "羽球記分",
+  "description": "離線也能使用的羽球計分器",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07172b",
+  "theme_color": "#0d2442",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
