@@ -48,13 +48,29 @@
       $('status').textContent=winner===null ? names[serve]+' 發球' : '🎉 '+names[winner]+' 贏得本局！';
       $('gameLabel').textContent='第 '+game+' 局 · '+limit+' 分制';
       document.querySelectorAll('.mode button').forEach(b=>b.classList.toggle('active',+b.dataset.limit===limit));
-      $('history').textContent=past.length?'最近得分：'+past.slice(-6).map(x=>x+1).join(' → '):'';
+      $('history').textContent=past.length?'最近得分：'+past.slice(-6).map(x=>x.team+1).join(' → '):'';
     }
     function swapPlayers(i){ const ids=i?["bTop","bBottom"]:["aTop","aBottom"], top=$(ids[0]), bottom=$(ids[1]); [top.value,bottom.value]=[bottom.value,top.value]; }
-    function add(i){ if(win(0)||win(1)) return; past.push(i); score[i]++; serve=i; swapPlayers(i); render(); }
+    function add(i){
+      if(win(0)||win(1)) return;
+      const swapped=serve===i;
+      past.push({team:i,swapped});
+      score[i]++;
+      if(swapped) swapPlayers(i);
+      serve=i;
+      render();
+    }
     document.querySelectorAll('.point').forEach(b=>b.onclick=()=>add(+b.dataset.team));
     document.querySelectorAll('.mode button').forEach(b=>b.onclick=()=>{ limit=+b.dataset.limit; render(); });
-    $('undo').onclick=()=>{ const i=past.pop(); if(i!==undefined){score[i]--; serve=past.length?past[past.length-1]:0; swapPlayers(i); render();} };
+    $('undo').onclick=()=>{
+      const point=past.pop();
+      if(point){
+        score[point.team]--;
+        if(point.swapped) swapPlayers(point.team);
+        serve=past.length?past[past.length-1].team:0;
+        render();
+      }
+    };
     $('newGame').onclick=()=>{ if(score[0]||score[1]) { game++; score=[0,0]; serve=0; past=[]; render(); } };
     $('reset').onclick=()=>{ score=[0,0]; serve=0; past=[]; game=1; render(); };
     document.querySelectorAll('.team-name').forEach(x=>x.addEventListener('input',render)); render();
